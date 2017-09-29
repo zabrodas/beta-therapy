@@ -1,0 +1,52 @@
+﻿.playbutton {
+    width: 100%;
+    color: #ffffff;
+    font: 12pt normal;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+
+#playlist_image .playbutton {
+    background: #004000;
+}
+#playlist_audio .playbutton {
+    background: #004060;
+}
+#playlist_video .playbutton {
+    background: #400040;
+}
+
+#playlist_image .playbutton:hover {
+    background: #006000;
+}
+#playlist_audio .playbutton:hover {
+    background: #006080;
+}
+#playlist_video .playbutton:hover {
+    background: #600060;
+}
+
+#playlist_image {
+}
+#playlist_audio {
+}
+#playlist_video {
+}
+
+#playlists>tbody>tr>td {
+    border: 1px solid black;
+    margin: 10pt;
+    padding: 10pt;
+}
+
+#playlist_image td,#playlist_audio td, #playlist_video td {
+    padding 5pt;
+}
+
+
+input.mmcontrol {
+    width: 40%;
+    color: #ffffff;
+    font: 12pt normal;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    background: #800000;
+}
