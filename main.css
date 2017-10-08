@@ -10,6 +10,11 @@
     background: cyan;
     border: solid 1px blue;
 }
+#lamp-controls input {
+    margin: 6pt;
+    padding: 6pt;
+    font-size: larger;
+}
 
 .playbutton {
     width: 100%;

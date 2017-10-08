@@ -99,8 +99,8 @@ function findDrunkenLamp() {
     $("#lamp-status").show();
     $("#lamp-controls").hide();
     var x=getHighOfMyIp();
-//    findDrunkenLamp_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
-    if (x!=null) findDrunkenLamp_iter(x[0], 170);
+    if (x!=null) findDrunkenLamp_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
+    // if (x!=null) findDrunkenLamp_iter(x[0], 170);
 }
 
 function showImage(index) {
