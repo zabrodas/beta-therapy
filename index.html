@@ -5,27 +5,36 @@
     <title>Бета терапия</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="main.css">
-    <link href="jquery-ui.css" rel="stylesheet">
     <script src="jquery-3.2.1.min.js"></script>
-    <script src="jquery-ui.min.js"></script>
     <script src="script.js"></script>
 </head>
 
 <body>
 
-
+<div id="lamp-status">
+Поиск лампы
+</div>
+<div id="lamp-controls">
+Лампа:
+<input id="lamp-on" type=button value="Вкл">
+<input id="lamp-off" type=button value="Выкл">
+<input id="lamp-blink" type=button value="Мерцать">
+<input id="lamp-sound1" type=button value="Звук 1">
+<input id="lamp-sound2" type=button value="Звук 2">
+<input id="lamp-burn" type=button value="Взрыв">
+</div>
 
 
 <table id=playlists>
-<tr><td colspan=3><div id="mainvolume"></div></td></tr>
+<tr><td colspan=3><input id="mainvolume" type=range min="0" max="100" value="50"></td></tr>
 
 <tr>
 <td></td>
-<td><div id="audiovolume"></div>
+<td><input id="audiovolume" type=range min="0" max="100" value="50">
 <input id=pauseaudio type=button class=mmcontrol value='||'>
 <input id=continueaudio type=button class=mmcontrol value='>>'>
 </td>
-<td><div id="videovolume"></div>
+<td><inout id="videovolume" type=range min="0" max="100" value="50"></div>
 <input id=pausevideo type=button class=mmcontrol value='||'>
 <input id=continuevideo type=button class=mmcontrol value='>>'>
 </td>

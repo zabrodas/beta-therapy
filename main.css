@@ -1,4 +1,17 @@
-﻿.playbutton {
+#lamp-status {
+    color: white;
+    background: red;
+    font-size: larger;
+    text-align: center;
+}
+#lamp-controls {
+    margin: 6pt;
+    padding: 6pt;
+    background: cyan;
+    border: solid 1px blue;
+}
+
+.playbutton {
     width: 100%;
     color: #ffffff;
     font: 12pt normal;
