@@ -126,8 +126,8 @@ function updatePlaylist(x) {
         row.find(".playbutton1").val("<-- "+name1);
         row.find(".playbutton2").val(name2+" -->");
 
-        row.find(".playbutton1").click(function() { play(0,playlist[i].index); });
-        row.find(".playbutton2").click(function() { play(1,playlist[i].index); });
+        row.find(".playbutton1").click(function() { play(0,playlist[i].index, playlist[i].name); });
+        row.find(".playbutton2").click(function() { play(1,playlist[i].index, playlist[i].name); });
 
         $("#playlist").append(row);
     });
@@ -197,7 +197,8 @@ function pausePlay(chan) {
 function continuePlay(chan) {
     $.get("", { "continue": chan } );
 }
-function play(chan, file) {
+function play(chan, file, name) {
+    $("#play-buttons"+(chan+1)+"-cell .trackname").text(name);
     $.get("", { "play": chan+","+file } );
 }
 

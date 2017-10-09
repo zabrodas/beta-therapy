@@ -20,7 +20,7 @@
 #controls input[type=button] { font-size: larger; padding: 10pt; margin:10pt; }
 #mainvolume-cell {background-color: #e0C0e0;}
 #volume1-cell,#play-buttons1-cell {background-color: #ffc0c0;}
-#volume2-cell,#play-butotns2-cell {background-color: #c0c0ff;}
+#volume2-cell,#play-buttons2-cell {background-color: #c0c0ff;}
 
 input[type=range] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
@@ -137,7 +137,7 @@ input[type=range]:focus::-ms-fill-upper {
 #play-buttons1-cell {
 
 }
-#play-butotns2-cell {
+#play-buttons2-cell {
 }
 #crossfade-cell {
     background: #ffc0ff; /* For browsers that do not support gradients */
