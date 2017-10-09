@@ -17,7 +17,7 @@ var lampRequestInProgress=null;
 function doLampRequest(cmd,onOk,onFail,url) {
     if (lampRequestInProgress!=null) {
         if (lampRequestInProgress.nextRequest!=null) {
-            onFail();
+            if (onFail!=null) onFail();
             return;
         }
         lampRequestInProgress.nextRequest={
@@ -31,13 +31,13 @@ function doLampRequest(cmd,onOk,onFail,url) {
             "cache": false,
             "success": function(data) {
                 var next=lampRequestInProgress.nextRequest; lampRequestInProgress=null;
-                onOk(data);
-                doLampRequest(next.cmd, next.onOk, next.onFail, next.url);
+                if (onOk!=null) onOk(data);
+                if (next!=null) doLampRequest(next.cmd, next.onOk, next.onFail, next.url);
             },
             "error": function() {
                 var next=lampRequestInProgress.nextRequest; lampRequestInProgress=null;
-                onFail();
-                doLampRequest(next.cmd, next.onOk, next.onFail, next.url);
+                if (onOk!=onFail) onFail();
+                if (next!=null) doLampRequest(next.cmd, next.onOk, next.onFail, next.url);
             },
             "dataType": "text",
             "timeout": 1000,
@@ -45,7 +45,9 @@ function doLampRequest(cmd,onOk,onFail,url) {
         };
     
     lampRequestInProgress=settings;
-    $.ajax((url==null ? lamp_url : url)+"/"+cmd+".", settings);
+    var u=url==null ? lamp_url : url;
+    $("#lamp-ip").text(u);
+    $.ajax(u+"/"+cmd+".", settings);
 }
 
 var lampErrCnt=0;
@@ -55,12 +57,12 @@ function lampTest() {
         "test",
         function() {
             $("#lamp-status").hide(500);
-            $("#lamp-controls").show(500);
+            $("#lamp-controls").fadeTo(500,1);
             lampErrCnt=0; setTimeout(lampTest,20000);
         },
         function() {
             $("#lamp-status").show(500);
-            $("#lamp-controls").hide(500);
+            $("#lamp-controls").fadeTo(500,0);
             if (++lampErrCnt>10) findDrunkenLamp();
             setTimeout(lampTest,5000);
         }
@@ -80,7 +82,7 @@ function findDrunkenLamp_iter(iph,ipl) {
                     lamp_url="http://"+iph+ipl+":"+lamp_port;
                     console.info("LAMP_FOUND URL="+lamp_url)
                     $("#lamp-status").hide(500);
-                    $("#lamp-controls").show(500);
+                    $("#lamp-controls").fadeTo(500,1);
                     lampErrCnt=0;
                     setTimeout(lampTest,20000);
                 } else {
@@ -97,46 +99,11 @@ function findDrunkenLamp_iter(iph,ipl) {
 
 function findDrunkenLamp() {
     $("#lamp-status").show();
-    $("#lamp-controls").hide();
+    $("#lamp-controls").fadeTo(500,0);
     var x=getHighOfMyIp();
-    if (x!=null) findDrunkenLamp_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
-    // if (x!=null) findDrunkenLamp_iter(x[0], 170);
+//    if (x!=null) findDrunkenLamp_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
+     if (x!=null) findDrunkenLamp_iter(x[0], 170);
 }
-
-function showImage(index) {
-    $.get("",{"image":index})
-}
-
-function playVideo(index) {
-    $.get("",{"video":index})
-}
-
-function playAudio(index) {
-    $.get("",{"audio":index})
-}
-
-function pauseAudio() {
-    $.get("", { "pauseAudio": "" } );
-};
-function continueAudio() {
-    $.get("", { "continueAudio": "" } );
-};
-function pauseVideo() {
-    $.get("", { "pauseVideo": "" } );
-};
-function continueVideo() {
-    $.get("", { "continueVideo": "" } );
-};
-
-function setMainVolume(value) {
-    $.get("", { "volume": value/100.0 } );
-};
-function setAudioVolume(value) {
-    $.get("", { "volumeAudio": value/100.0 } );
-};
-function setVideoVolume(value) {
-    $.get("", { "volumeVideo": value/100.0 } );
-};
 
 
 function updatePlaylist(x) {
@@ -147,59 +114,105 @@ function updatePlaylist(x) {
     playlist.sort(function(a,b) { if (a.name>b.name) return 1; if (a.name<b.name) return -1; return 0; });
 
     var table=$("#playlist");
-    table.empty();
+//    table.empty();
     $.each(playlist, function(i,v) {
-        var row=$("<tr><td><input type=button class=playbutton value='>'></td></tr>");
+        var row=$("<div><input type=button class='playbutton playbutton1' value='>'><input type=button class='playbutton playbutton2' value='>'></div>");
         var name=playlist[i].name;
         var splittedName=name.split(".");
         var type=splittedName[splittedName.length-1];
         var fileindex=playlist[i].index;
+        var name1=name.substring(0,name.length/2);
+        var name2=name.substring(name1.length);
+        row.find(".playbutton1").val("<-- "+name1);
+        row.find(".playbutton2").val(name2+" -->");
 
-        var plname=null;
-        if (type=="mp4") {
-            row.find(".playbutton").click( function() { playVideo(fileindex); });
-            plname="video";
-        } else if (type=="mp3" || type=="wav") {
-            row.find(".playbutton").click( function() { playAudio(fileindex); });
-            plname="audio";
-        } else if (type=="jpg" || type=="png" || type=="gif") {
-            row.find(".playbutton").click( function() { showImage(fileindex); });
-            plname="image";
-        } else {
-            // unknow type
-        }
-        if (plname!=null) {
-            $("#playlist_"+plname).append(row);
-            row.find(".playbutton").val(name);
-        };
+        row.find(".playbutton1").click(function() { play(0,playlist[i].index); });
+        row.find(".playbutton2").click(function() { play(1,playlist[i].index); });
+
+        $("#playlist").append(row);
     });
 }
 
 function httpGetPlaylist() {
+    $("#errmsg").show().text("Загрузка списка треков...");
+
     $.getJSON(
         "",
         {"mfilelist":""}, 
         function( resp ) {  $("#errmsg").hide(); updatePlaylist(resp); }
     ).fail(
         function() {
-            $("#errmsg").show().text("Can't get file list from server");
+            $("#errmsg").show().text("Ошибка при загрузке списка треков");
         }
     );
 }
 
+function mainVolume(value) {
+    $.get("", { "setMainVolume": value/100.0 } );
+};
+
+var setVolume1Request=null;
+var setVolume1Inprogress=false;
+function volume1(value) {
+    if (setVolume1Inprogress) {
+        setVolume1Request=value;
+    } else {
+        setVolume1Inprogress=true;
+        var cf=$("#crossfade").val()/100.0;
+        cf = (cf<=0.5) ? 1.0 : (1.0-cf)*2.0;
+        var v=value/100.0*cf;
+        $.get("", { "setVolume": "0,"+v })
+        .always(function() {
+            setVolume1Inprogress=false;
+            if (setVolume1Request!=null) { var r=setVolume1Request; setVolume1Request=null; volume1(r); }
+        });
+    }
+};
+
+var setVolume2Request=null;
+var setVolume2Inprogress=false;
+function volume2(value) {
+    if (setVolume2Inprogress) {
+        setVolume2Request=value;
+    } else {
+        setVolume2Inprogress=true;
+        var cf=$("#crossfade").val()/100.0;
+        cf = (cf>=0.5) ? 1.0 : cf*2.0;
+        var v=value/100.0*cf;
+        $.get("", { "setVolume": "1,"+v })
+        .always(function() {
+            setVolume2Inprogress=false;
+            if (setVolume2Request!=null) { var r=setVolume2Request; setVolume2Request=null; volume2(r); }
+        });
+    }
+};
+function crossfade(value) {
+    volume1($("#volume1").val());
+    volume2($("#volume2").val());
+}
+
+function pausePlay(chan) {
+    $.get("", { "pause": chan } );
+}
+function continuePlay(chan) {
+    $.get("", { "continue": chan } );
+}
+function play(chan, file) {
+    $.get("", { "play": chan+","+file } );
+}
+
 $(function() {
     httpGetPlaylist();
-    $("#pauseaudio").click( pauseAudio );
-    $("#continueaudio").click( continueAudio );
-    $("#pausevideo").click( pauseVideo );
-    $("#continuevideo").click( continueVideo );
-    
-//    $("#mainvolume").change(function() { setMainVolume(this.value) } );
-//    $("#audiovolume").change(function() { setAudioVolume(this.value) } );
-//    $("#videovolume").change(function() { setVideoVolume(this.value) } );
-    $("#mainvolume").get(0).oninput=function() { setMainVolume(this.value) };
-    $("#audiovolume").get(0).oninput=function() { setAudioVolume(this.value) };
-    $("#videovolume").get(0).oninput=function() { setVideoVolume(this.value) };
+
+    $("#mainvolume").get(0).oninput=function() { mainVolume(this.value) };
+    $("#volume1").get(0).oninput=function() { volume1(this.value) };
+    $("#volume2").get(0).oninput=function() { volume2(this.value) };
+    $("#crossfade").get(0).oninput=function() { crossfade(this.value) };
+
+    $("#pause1").click(function() { pausePlay(0); });
+    $("#play1").click(function() { continuePlay(0); });
+    $("#pause2").click(function() { pausePlay(1); });
+    $("#play2").click(function() { continuePlay(1); });
 
     findDrunkenLamp();
     $("#lamp-on").click(function() { lampControl("on"); });

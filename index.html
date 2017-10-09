@@ -11,8 +11,10 @@
 
 <body>
 
-<div id="lamp-status">
-Поиск лампы
+<div id=maincontent>
+
+<div id="lamp-status" style="position:absolute">
+Поиск лампы <span id="lamp-ip"></span>
 </div>
 <div id="lamp-controls">
 Лампа:
@@ -24,32 +26,32 @@
 <input id="lamp-burn" type=button value="Взрыв">
 </div>
 
-
-<table id=playlists>
-<tr><td colspan=3><input id="mainvolume" type=range min="0" max="100" value="50"></td></tr>
-
+<div id="controls">
+<table border=0 colspace=0 width=100%>
+<tr><td colspan=2 id=mainvolume-cell>
+<input id="mainvolume" type=range min="0" max="100" value="50" style="width:100%">
+</td></tr>
 <tr>
-<td></td>
-<td><input id="audiovolume" type=range min="0" max="100" value="50">
-<input id=pauseaudio type=button class=mmcontrol value='||'>
-<input id=continueaudio type=button class=mmcontrol value='>>'>
-</td>
-<td><inout id="videovolume" type=range min="0" max="100" value="50"></div>
-<input id=pausevideo type=button class=mmcontrol value='||'>
-<input id=continuevideo type=button class=mmcontrol value='>>'>
-</td>
+<td id=volume1-cell><input id="volume1" type=range min="0" max="100" value="50" style="width:100%"></td>
+<td id=volume2-cell><input id="volume2" type=range min="0" max="100" value="50" style="width:100%"></td>
 </tr>
-
 <tr>
-<td><table id=playlist_image></table></td>
-<td>
-<table id=playlist_audio></table>
-</td>
-<td>
-<div id="videovolume"></div>
-<table id=playlist_video></table>
-</td>
-</tr></table>
+<td id=play-buttons1-cell align=center><input id="pause1" type=button value="||"><input id="play1" type=button value=">>"></td>
+<td id=play-butotns2-cell align=center><input id="pause2" type=button value="||"><input id="play2" type=button value=">>"></td>
+</tr>
+<tr><td id=crossfade-cell colspan=2>
+<input id="crossfade" type=range min="0" max="100" value="50" style="width:100%">
+</td></tr>
+</table>
+</div>
+
+</div>
+
+<footer>
+<div id=errmsg></div>
+
+<div id=playlist></div>
+<footer>
 
 </body>
 </html>

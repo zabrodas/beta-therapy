@@ -1,4 +1,4 @@
-#lamp-status {
+#lamp-status,#errmsg {
     color: white;
     background: red;
     font-size: larger;
@@ -16,55 +16,194 @@
     font-size: larger;
 }
 
+#controls td { height: 35pt;padding: 10pt; }
+#controls input[type=button] { font-size: larger; padding: 10pt; margin:10pt; }
+#mainvolume-cell {background-color: #e0C0e0;}
+#volume1-cell,#play-buttons1-cell {background-color: #ffc0c0;}
+#volume2-cell,#play-butotns2-cell {background-color: #c0c0ff;}
+
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #3071a9;
+}
+input[type=range]::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+
+
+#play-buttons1-cell {
+
+}
+#play-butotns2-cell {
+}
+#crossfade-cell {
+    background: #ffc0ff; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left, #ffc0c0, #c0c0ff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #ffc0c0, #c0c0ff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #ffc0c0, #c0c0ff); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(right, #ffc0c0, #c0c0ff); /* Standard syntax */
+}
+
 .playbutton {
-    width: 100%;
-    color: #ffffff;
-    font: 12pt normal;
+    width: 50%;
+    font-size: larger;
     font-family: Geneva, Arial, Helvetica, sans-serif;
 }
 
-#playlist_image .playbutton {
-    background: #004000;
+.playbutton1 {
+    text-align: right;
+    border-width: 1px 0px 1px 1px;
+    padding: 6pt 0pt 6pt 0pt;
+    background-color: #ffc0c0;
+    background: -webkit-linear-gradient(left, #ffc0c0, #e0c0e0); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #ffc0c0, #e0c0e0); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #ffc0c0, #e0c0e0); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(right, #ffc0c0, #e0c0e0); /* Standard syntax */
 }
-#playlist_audio .playbutton {
-    background: #004060;
-}
-#playlist_video .playbutton {
-    background: #400040;
-}
-
-#playlist_image .playbutton:hover {
-    background: #006000;
-}
-#playlist_audio .playbutton:hover {
-    background: #006080;
-}
-#playlist_video .playbutton:hover {
-    background: #600060;
-}
-
-#playlist_image {
-}
-#playlist_audio {
-}
-#playlist_video {
+.playbutton2 {
+    text-align: left;
+    border-width: 0px 1px 1px 1px;
+    padding: 6pt 0pt 6pt 0pt;
+    background-color: #c0c0ff;
+    background: -webkit-linear-gradient(left, #e0c0e0, #c0c0ff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #e0c0e0, #c0c0ff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #e0c0e0, #c0c0ff); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(right, #e0c0e0, #c0c0ff); /* Standard syntax */
 }
 
-#playlists>tbody>tr>td {
-    border: 1px solid black;
-    margin: 10pt;
-    padding: 10pt;
+#playlist {
+    overflow-y: scroll;
+    height: 200px;
 }
 
-#playlist_image td,#playlist_audio td, #playlist_video td {
-    padding 5pt;
+#playlist::-webkit-scrollbar-button {
+    background-color: blue;
 }
 
+#playlist::-webkit-scrollbar-track {
+    background-color:blue;
+}
 
-input.mmcontrol {
-    width: 40%;
-    color: #ffffff;
-    font: 12pt normal;
-    font-family: Geneva, Arial, Helvetica, sans-serif;
-    background: #800000;
+#playlist::-webkit-scrollbar-thumb {
+-webkit-border-radius: 3px;
+border-radius: 3px;
+background-color:red;
+width:10pt;
+}
+
+#playlist::-webkit-resizer{
+background-color: red;
+width:20pt;
+height:20pt;
+}
+
+#playlist::-webkit-scrollbar, #playlist .scroll-compensator {
+    width: 40pt;
+}
+
+#maincontent {
+    height: 100%;
 }
