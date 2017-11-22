@@ -13,10 +13,11 @@
 
 <div id=maincontent>
 
-<div id="lamp-status" style="position:absolute">
-Поиск лампы <span id="lamp-ip"></span>
+<div id="equipmentScanning" style="position:absolute">
+Поиск оборудования <span id="scan-ip"></span>
 </div>
 <div id="lamp-controls">
+<span id="lamp-warning">!</span>
 Лампа:
 <input id="lamp-on" type=button value="Вкл">
 <input id="lamp-off" type=button value="Выкл">
@@ -25,6 +26,14 @@
 <input id="lamp-sound2" type=button value="Звук 2">
 <input id="lamp-burn" type=button value="Взрыв">
 </div>
+
+<div id="spot-controls">
+<span id="spot-warning">!</span>
+Контрсвет:
+<input id="spot-on" type=button value="Вкл">
+<input id="spot-off" type=button value="Выкл">
+</div>
+
 
 <div id="controls">
 <table border=0 colspace=0 width=100%>

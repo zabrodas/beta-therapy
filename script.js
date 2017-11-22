@@ -1,6 +1,22 @@
 var playlist=[];
-var lamp_port=8080;
-var lamp_url=null;
+var equipment_port=8080;
+
+var equipment_list={
+    "LAMP": {
+        "gui": "#lamp-controls",
+        "warning": "#lamp-warning"
+    },
+    "SPOT1": {
+        "gui": "#spot-controls",
+        "warning": "#spot-warning"
+    }
+}
+
+$.each(equipment_list, function(n,s) {
+    s.ipl=null;
+    s.url=null;
+    s.errCnt=0;
+})
 
 function getHighOfMyIp() {
     var a=$("<a></a>");
@@ -12,17 +28,23 @@ function getHighOfMyIp() {
     return [ myIpHigh, Number(splittedHost[3]) ];
 }
 
-var lampRequestInProgress=null;
 
-function doLampRequest(cmd,onOk,onFail,url) {
-    if (lampRequestInProgress!=null) {
-        if (lampRequestInProgress.nextRequest!=null) {
-            if (onFail!=null) onFail();
-            return;
-        }
-        lampRequestInProgress.nextRequest={
-            "cmd":cmd, "onOk":onOk, "onFail":onFail, "url":url
-        }
+var equipmentRequestCnt=0;
+
+function doEquipmentRequestByName(equipment,cmd,onOk,onFail) {
+    console.info("doEquipmentRequestByName "+equipment+" "+equipment_list[equipment].url);
+    doEquipmentRequestByUrl(equipment_list[equipment].url,cmd,onOk,onFail);
+}
+
+function doEquipmentRequestByUrl(url,cmd,onOk,onFail) {
+    if (url==null) {
+        if (onFail!=null) onFail();
+        return;
+    }
+
+    if (equipmentRequestCnt>5) {
+        console.info("Drop request "+url);
+        if (onFail!=null) onFail();
         return;
     }
 
@@ -30,79 +52,117 @@ function doLampRequest(cmd,onOk,onFail,url) {
         {
             "cache": false,
             "success": function(data) {
-                var next=lampRequestInProgress.nextRequest; lampRequestInProgress=null;
+                equipmentRequestCnt--;
                 if (onOk!=null) onOk(data);
-                if (next!=null) doLampRequest(next.cmd, next.onOk, next.onFail, next.url);
             },
             "error": function() {
-                var next=lampRequestInProgress.nextRequest; lampRequestInProgress=null;
-                if (onOk!=onFail) onFail();
-                if (next!=null) doLampRequest(next.cmd, next.onOk, next.onFail, next.url);
+                equipmentRequestCnt--;
+                if (onFail!=null) onFail();
             },
             "dataType": "text",
             "timeout": 1000,
             "nextRequest": null
         };
-    
-    lampRequestInProgress=settings;
-    var u=url==null ? lamp_url : url;
-    $("#lamp-ip").text(u);
-    $.ajax(u+"/"+cmd+".", settings);
+
+//    console.info("Send request "+url);        
+    equipmentRequestCnt++;
+    $.ajax(url+"/"+cmd+".", settings);
 }
 
-var lampErrCnt=0;
-
-function lampTest() {
-    doLampRequest(
+function equipmentTest(equipment) {
+    console.info("equipmentTest("+equipment+")");
+    doEquipmentRequestByName(
+        equipment,
         "test",
         function() {
-            $("#lamp-status").hide(500);
-            $("#lamp-controls").fadeTo(500,1);
-            lampErrCnt=0; setTimeout(lampTest,20000);
+            console.info("Test "+equipment+" OK");
+            equipment_list[equipment].errCnt=0;
+            $(equipment_list[equipment].warning).fadeTo(500,0);
+            setTimeout(function() { equipmentTest(equipment); },20000);
         },
         function() {
-            $("#lamp-status").show(500);
-            $("#lamp-controls").fadeTo(500,0);
-            if (++lampErrCnt>10) findDrunkenLamp();
-            setTimeout(lampTest,5000);
+            console.info("Test "+equipment+" Fail. Cnt="+equipment_list[equipment].errCnt);
+            $(equipment_list[equipment].warning).fadeTo(500,1);
+            if (++equipment_list[equipment].errCnt>10) {
+                equipment_list[equipment].url=null;
+                scanForEquipment();
+            } else {
+                setTimeout(function() { equipmentTest(equipment); },5000);
+            }
         }
     );
 }
 
 function lampControl(cmd) {
-    doLampRequest(cmd);
+    doEquipmentRequestByName("LAMP",cmd);
+}
+function spotControl(cmd) {
+    doEquipmentRequestByName("SPOT1",cmd);
 }
 
-function findDrunkenLamp_iter(iph,ipl) {
-    console.info("LAMP_SEARCH try:"+iph+ipl);
-    doLampRequest(
+function isAllEquipmentConnected() {
+    var result=true;
+    $.each(equipment_list, function(n,s) { result=(s.url!=null); return result; });
+    return result;
+}
+
+var equipmentScanningInProgress=false;
+
+function scanForEquipment_iter(iph,ipl) {
+    console.info("Scanning for equipment:"+iph+ipl);
+    var url="http://"+iph+ipl+":"+equipment_port;
+    $("#scan-ip").text(url);
+    doEquipmentRequestByUrl(
+        url,
         "test",
         function(data) {
-                if (data=="LAMP") {
-                    lamp_url="http://"+iph+ipl+":"+lamp_port;
-                    console.info("LAMP_FOUND URL="+lamp_url)
-                    $("#lamp-status").hide(500);
-                    $("#lamp-controls").fadeTo(500,1);
-                    lampErrCnt=0;
-                    setTimeout(lampTest,20000);
+                $.each(equipment_list, function(n,s) {
+                    if (data==n) {
+                        console.info("data="+data+" n="+n);
+                        var needStartTest = (s.url==null);
+                        s.url=url;
+                        s.ipl=ipl;
+                        s.errCnt=0;
+                        if (needStartTest) {
+                            setTimeout(function() { equipmentTest(n); },1000);
+                            console.info("Equipment "+n+" found: "+url);
+                        } else {
+                            console.info("Equipment "+n+" update: "+url);
+                        }
+                    }
+                });
+                equipmentGuiCtrl();
+                if (isAllEquipmentConnected()) {
+                    $("#equipmentScanning").hide(500);
+                    equipmentScanningInProgress=false;
                 } else {
-                    setting.error();
+                    scanForEquipment_iter(iph, ipl<254 ? ipl+1 : 2);
                 }
         },
         function() {
-            findDrunkenLamp_iter(iph, ipl<254 ? ipl+1 : 2);
-        },
-        "http://"+iph+ipl+":"+lamp_port
+            scanForEquipment_iter(iph, ipl<254 ? ipl+1 : 2);
+        }
      );
 }
 
+function equipmentGuiCtrl() {
+    $.each(equipment_list, function(n,s) {
+        if (s.url==null) {
+            $(s.gui).fadeTo(500,0);
+        } else {
+            $(s.gui).fadeTo(500,1);
+        }
+    });
+}
 
-function findDrunkenLamp() {
-    $("#lamp-status").show();
-    $("#lamp-controls").fadeTo(500,0);
+function scanForEquipment() {
+    equipmentGuiCtrl();
+    if (equipmentScanningInProgress) return;
+    equipmentScanningInProgress=true;
+    $("#equipmentScanning").show();
     var x=getHighOfMyIp();
-//    if (x!=null) findDrunkenLamp_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
-     if (x!=null) findDrunkenLamp_iter(x[0], 170);
+//    if (x!=null) scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
+    if (x!=null) scanForEquipment_iter(x[0], 170);
 }
 
 
@@ -215,13 +275,16 @@ $(function() {
     $("#pause2").click(function() { pausePlay(1); });
     $("#play2").click(function() { continuePlay(1); });
 
-    findDrunkenLamp();
+    scanForEquipment();
     $("#lamp-on").click(function() { lampControl("on"); });
     $("#lamp-off").click(function() { lampControl("off"); });
     $("#lamp-blink").click(function() { lampControl("blink"); });
     $("#lamp-sound1").click(function() { lampControl("sound1"); });
     $("#lamp-sound2").click(function() { lampControl("sound2"); });
     $("#lamp-burn").click(function() { lampControl("burn"); });
+
+    $("#spot-on").click(function() { spotControl("on"); });
+    $("#spot-off").click(function() { spotControl("off"); });
 
 })
 

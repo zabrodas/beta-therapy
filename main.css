@@ -1,16 +1,16 @@
-#lamp-status,#errmsg {
+#equipmentScanning,#errmsg,#lamp-warning,#spot-warning {
     color: white;
     background: red;
     font-size: larger;
     text-align: center;
 }
-#lamp-controls {
+#lamp-controls,#spot-controls {
     margin: 6pt;
     padding: 6pt;
     background: cyan;
     border: solid 1px blue;
 }
-#lamp-controls input {
+#lamp-controls,#spot-controls input {
     margin: 6pt;
     padding: 6pt;
     font-size: larger;
@@ -176,7 +176,6 @@ input[type=range]:focus::-ms-fill-upper {
 
 #playlist {
     overflow-y: scroll;
-    height: 200px;
 }
 
 #playlist::-webkit-scrollbar-button {
