@@ -2,13 +2,20 @@ var playlist=[];
 var equipment_port=8080;
 
 var equipment_list={
+
     "LAMP": {
         "gui": "#lamp-controls",
         "warning": "#lamp-warning"
     },
+
     "SPOT1": {
         "gui": "#spot-controls",
         "warning": "#spot-warning"
+    },
+
+    "COMBO": {
+        "gui": "#combo-controls",
+        "warning": "#combo-warning"
     }
 }
 
@@ -99,6 +106,33 @@ function lampControl(cmd) {
 function spotControl(cmd) {
     doEquipmentRequestByName("SPOT1",cmd);
 }
+function doControl(index,value) {
+    cmd= (value!=0 ? "on": "off")+index;
+    doEquipmentRequestByName("COMBO",cmd);
+}
+
+var b2h=[];
+for (var i=0; i<16; i++) {
+    for (var j=0; j<16; j++) {
+        var h="0123456789ABCDEF";
+        var hh=h[i]+h[j];
+        b2h.push(hh);
+    }
+}
+
+function dmxControl(r,g,b) {
+    var rl=Math.round(expColor(r)*255);
+    var gl=Math.round(expColor(g)*255);
+    var bl=Math.round(expColor(b)*255);
+//    $("#combo-warning").text(rl+","+gl+","+bl);
+    cmd="dmx=ff"+b2h[rl]+b2h[gl]+b2h[bl]+"0000000000";
+    doEquipmentRequestByName("COMBO",cmd);
+}
+
+function smokeControl(dur) {
+    cmd="smoke"+dur;
+    doEquipmentRequestByName("COMBO",cmd);
+}
 
 function isAllEquipmentConnected() {
     var result=true;
@@ -148,7 +182,8 @@ function scanForEquipment_iter(iph,ipl) {
 function equipmentGuiCtrl() {
     $.each(equipment_list, function(n,s) {
         if (s.url==null) {
-            $(s.gui).fadeTo(500,0);
+//            $(s.gui).fadeTo(500,0);
+            $(s.gui).fadeTo(500,1);
         } else {
             $(s.gui).fadeTo(500,1);
         }
@@ -162,7 +197,13 @@ function scanForEquipment() {
     $("#equipmentScanning").show();
     var x=getHighOfMyIp();
 //    if (x!=null) scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
-    if (x!=null) scanForEquipment_iter(x[0], 170);
+    if (x!=null) {
+        scanForEquipment_iter(x[0], 170);
+    } else {    // test mode
+        $.each(equipment_list, function(n,s) {
+            $(s.gui).fadeTo(500,1);
+        });
+    }
 }
 
 
@@ -262,7 +303,40 @@ function play(chan, file, name) {
     $.get("", { "play": chan+","+file } );
 }
 
+function onChangeDmx(c) {
+    var r=c._r/255;
+    var g=c._g/255;
+    var b=c._b/255;
+    dmxControl(r,g,b);
+}
+
+
 $(function() {
+    $("#tabs").tabs();
+    $("#dmx").spectrum({
+        color: "#000",
+        flat: true,
+        showInput: true,
+        showPalette: true,
+        showInput: false,
+        palette: [
+            ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+            ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+            ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+            ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+            ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+            ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+            ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+            ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+        ],
+        clickoutFiresChange: true,
+        showButtons: false,
+        move: function(c) { onChangeDmx(c); },
+        show: function(c) { onChangeDmx(c); },
+        hide: function(c) { onChangeDmx(c); },
+        beforeShow: function(c) { onChangeDmx(c); },
+    });
+
     httpGetPlaylist();
 
     $("#mainvolume").get(0).oninput=function() { mainVolume(this.value) };
@@ -286,6 +360,11 @@ $(function() {
     $("#spot-on").click(function() { spotControl("on"); });
     $("#spot-off").click(function() { spotControl("off"); });
 
-})
+    $("#do1").change(function() { doControl(1,$(this).get(0).checked); });
+    $("#do2").change(function() { doControl(2,$(this).get(0).checked); });
+    $("#do3").change(function() { doControl(3,$(this).get(0).checked); });
+    $("#do4").change(function() { doControl(4,$(this).get(0).checked); });
 
+    $("#smoke input").click(function() { smokeControl(this.value); });
+})
 

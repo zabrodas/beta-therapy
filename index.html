@@ -1,66 +1,99 @@
 ﻿<!DOCTYPE html>
 <html>
-
-<head>
-    <title>Бета терапия</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="main.css">
-    <script src="jquery-3.2.1.min.js"></script>
-    <script src="script.js"></script>
-</head>
-
-<body>
-
-<div id=maincontent>
-
-<div id="equipmentScanning" style="position:absolute">
-Поиск оборудования <span id="scan-ip"></span>
-</div>
-<div id="lamp-controls">
-<span id="lamp-warning">!</span>
-Лампа:
-<input id="lamp-on" type=button value="Вкл">
-<input id="lamp-off" type=button value="Выкл">
-<input id="lamp-blink" type=button value="Мерцать">
-<input id="lamp-sound1" type=button value="Звук 1">
-<input id="lamp-sound2" type=button value="Звук 2">
-<input id="lamp-burn" type=button value="Взрыв">
-</div>
-
-<div id="spot-controls">
-<span id="spot-warning">!</span>
-Контрсвет:
-<input id="spot-on" type=button value="Вкл">
-<input id="spot-off" type=button value="Выкл">
-</div>
-
-
-<div id="controls">
-<table border=0 colspace=0 width=100%>
-<tr><td colspan=2 id=mainvolume-cell>
-<input id="mainvolume" type=range min="0" max="100" value="50" style="width:100%">
-</td></tr>
-<tr>
-<td id=volume1-cell><input id="volume1" type=range min="0" max="100" value="50" style="width:100%"></td>
-<td id=volume2-cell><input id="volume2" type=range min="0" max="100" value="50" style="width:100%"></td>
-</tr>
-<tr>
-<td id=play-buttons1-cell align=center><div class=trackname></div><input id="pause1" type=button value="||"><input id="play1" type=button value=">>"></td>
-<td id=play-buttons2-cell align=center><div class=trackname></div><input id="pause2" type=button value="||"><input id="play2" type=button value=">>"></td>
-</tr>
-<tr><td id=crossfade-cell colspan=2>
-<input id="crossfade" type=range min="0" max="100" value="50" style="width:100%">
-</td></tr>
-</table>
-</div>
-
-</div>
-
-<footer>
-<div id=errmsg></div>
-
-<div id=playlist></div>
-<footer>
-
-</body>
+   <head>
+      <title>Бета терапия</title>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="jquery-ui.min.css">
+      <link rel="stylesheet" href="spectrum.css">
+      <script src="jquery-3.2.1.min.js"></script>
+      <script src="jquery-ui.min.js"></script>
+      <script src="spectrum.js"></script>
+      <script src="colorcalc.js"></script>
+      <script src="script.js"></script>
+   </head>
+   <body>
+      <div id=maincontent>
+      <div id="tabs">
+         <ul>
+            <li><a href="#tabs-lights">Свет</a></li>
+            <li><a href="#tabs-projector">Проектор</a></li>
+         </ul>
+         <div id=tabs-lights>
+            <div id="equipmentScanning" style="position:absolute">
+               Поиск оборудования <span id="scan-ip"></span>
+            </div>
+            <div id="lamp-controls">
+               <span id="lamp-warning">!</span>
+               Лампа:
+               <input id="lamp-on" type=button value="Вкл">
+               <input id="lamp-off" type=button value="Выкл">
+               <input id="lamp-blink" type=button value="Мерцать">
+               <input id="lamp-sound1" type=button value="Звук 1">
+               <input id="lamp-sound2" type=button value="Звук 2">
+               <input id="lamp-burn" type=button value="Взрыв">
+            </div>
+            <div id="spot-controls">
+               <span id="spot-warning">!</span>
+               Контрсвет:
+               <input id="spot-on" type=button value="Вкл">
+               <input id="spot-off" type=button value="Выкл">
+            </div>
+            <div id="combo-controls">
+               <span id="combo-warning">!</span>
+               <div id=combo-do>
+                  Свет:
+                  <input id="do1" type=checkbox value="Свет1">
+                  <input id="do2" type=checkbox value="Свет2">
+                  <input id="do3" type=checkbox value="Свет3">
+                  <input id="do4" type=checkbox value="Свет4">
+               </div>
+               <div class=dmxwrapper>
+                  <input type=text class=dmx id=dmx>
+               </div>
+               <div id=smoke>
+                Дым:
+                <input type=button value=1>
+                <input type=button value=2>
+                <input type=button value=3>
+                <input type=button value=5>
+                <input type=button value=10>
+                <input type=button value=30>
+               </div>
+            </div>
+         </div>
+         <div id=tabs-projector>
+            <div id="controls">
+               <table border=0 colspace=0 width=100%>
+                  <tr>
+                     <td colspan=2 id=mainvolume-cell>
+                        <input id="mainvolume" type=range min="0" max="100" value="50" style="width:100%">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td id=volume1-cell><input id="volume1" type=range min="0" max="100" value="50" style="width:100%"></td>
+                     <td id=volume2-cell><input id="volume2" type=range min="0" max="100" value="50" style="width:100%"></td>
+                  </tr>
+                  <tr>
+                     <td id=play-buttons1-cell align=center>
+                        <div class=trackname></div>
+                        <input id="pause1" type=button value="||"><input id="play1" type=button value=">>">
+                     </td>
+                     <td id=play-buttons2-cell align=center>
+                        <div class=trackname></div>
+                        <input id="pause2" type=button value="||"><input id="play2" type=button value=">>">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td id=crossfade-cell colspan=2>
+                        <input id="crossfade" type=range min="0" max="100" value="50" style="width:100%">
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div id=errmsg></div>
+            <div id=playlist></div>
+         </div>
+      </div>
+   </body>
 </html>
