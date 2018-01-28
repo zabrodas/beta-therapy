@@ -1,24 +1,71 @@
-#equipmentScanning,#errmsg,#lamp-warning,#spot-warning,#combo-warning {
-    color: white;
-    background: red;
-    font-size: larger;
-    text-align: center;
-}
-#lamp-controls,#spot-controls,#combo-controls {
-    display: inline-block;
-    margin: 6pt;
-    padding: 6pt;
-    background: cyan;
-    border: solid 1px blue;
-}
-#lamp-controls,#spot-controls,#combo-controls input {
-    /* margin: 6pt; */
-    /* padding: 6pt; */
-    /* font-size: larger; */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 
-#controls td { height: 35pt;padding: 10pt; }
-#controls input[type=button] { font-size: larger; padding: 10pt; margin:10pt; }
+
+.errMsg {
+    color: white;
+    background: red;
+    text-align: center;
+}
+
+.lightControlGroup {
+    background: cyan;
+    border: none;
+}
+
+.lightControlGroup td {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    text-align:left;
+    border-bottom: 1px black solid;
+}
+.lightControlGroup tr:first-child {
+}
+
+table {
+    border-spacing:0
+} 
+
+/*
+td {
+    border: 1px red solid !important;
+}
+td td {
+    border: 1px blue solid !important;
+}
+
+td td td {
+    border: 1px green solid !important;
+}
+td td td td {
+    border: 1px magenta solid !important;
+}
+*/
+
+.maintable>tbody>tr>td {
+    border: 1px black solid
+}
+
+#controls td { padding: 10pt; }
+#controls input[type=button] { font-size: larger; padding: 5pt; margin:5pt; }
 #mainvolume-cell {background-color: #e0C0e0;}
 #volume1-cell,#play-buttons1-cell {background-color: #ffc0c0;}
 #volume2-cell,#play-buttons2-cell {background-color: #c0c0ff;}
@@ -134,12 +181,6 @@
   background: #367ebd;
 }
 
-.dmxwrapper {
-    display: block;
-    background: white; /* Otherwise white in Chrome */
-    padding:1em;
-    border: solid 1px black;
-}
 
 .colorslider {
     -webkit-appearance: none;
@@ -251,28 +292,6 @@
 .colorslider:focus::-ms-fill-upper {
   background: -ms-linear-gradient(left, #ff0000 0%,#ffff00 17%,#00ff00 33%,#00ffff 50%,#0000ff 67%,#ff00ff 83%,#ff0000 100%);
 }
-.divgrb {
-    width: 15em;
-    height: 15em;
-    display: block;
-    background: red;
-    border: solid 1px black;
-}
-#dmxmask {
-  width: 100%;
-  height: 100%;
-}
-#dmxmarker {
-  position:absolute;
-  left: 700px;
-}
-#combo-do {
-  display: inline-block;
-  margin: 1em;
-}
-#combo-do input[type=checkbox] {
-  margin: 1em;
-}
 
 #play-buttons1-cell {
 
@@ -314,8 +333,8 @@
     background: linear-gradient(right, #e0c0e0, #c0c0ff); /* Standard syntax */
 }
 
-#playlist {
-    overflow-y: scroll;
+.scrollable {
+    overflow-y:scroll;
 }
 
 #playlist::-webkit-scrollbar-button {
@@ -337,10 +356,6 @@ width:10pt;
 background-color: red;
 width:20pt;
 height:20pt;
-}
-
-#playlist::-webkit-scrollbar, #playlist .scroll-compensator {
-    width: 40pt;
 }
 
 #maincontent {

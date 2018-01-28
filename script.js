@@ -198,7 +198,7 @@ function scanForEquipment() {
     var x=getHighOfMyIp();
 //    if (x!=null) scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
     if (x!=null) {
-        scanForEquipment_iter(x[0], 170);
+        scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
     } else {    // test mode
         $.each(equipment_list, function(n,s) {
             $(s.gui).fadeTo(500,1);
@@ -232,6 +232,7 @@ function updatePlaylist(x) {
 
         $("#playlist").append(row);
     });
+    onResizeWindow();
 }
 
 function httpGetPlaylist() {
@@ -310,9 +311,16 @@ function onChangeDmx(c) {
     dmxControl(r,g,b);
 }
 
+function onResizeWindow() {
+    var w=$(window).width();
+    var h=$(window).height();
+    $("#leftColon").height(h-6);
+    $("#playlist").height(h-$("#controls").height()-6);
+}
+
+
 
 $(function() {
-    $("#tabs").tabs();
     $("#dmx").spectrum({
         color: "#000",
         flat: true,
@@ -366,5 +374,8 @@ $(function() {
     $("#do4").change(function() { doControl(4,$(this).get(0).checked); });
 
     $("#smoke input").click(function() { smokeControl(this.value); });
+
+    $(window).resize(onResizeWindow);
+    onResizeWindow();
 })
 
