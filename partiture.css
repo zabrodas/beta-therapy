@@ -1,0 +1,8 @@
+﻿.partiture>tbody>tr>td {
+    border: 1px black solid;
+    padding: 0.5em;
+}
+.partiture a {
+    font-size: larger;
+    color: #0000ff;
+}

@@ -129,6 +129,24 @@ function dmxControl(r,g,b) {
     doEquipmentRequestByName("COMBO",cmd);
 }
 
+function dmxControl2(r1,g1,b1, r2,g2,b2) {
+    var rl1=Math.round(expColor(r1)*255);
+    var gl1=Math.round(expColor(g1)*255);
+    var bl1=Math.round(expColor(b1)*255);
+
+    var rl2=Math.round(expColor(r2)*255);
+    var gl2=Math.round(expColor(g2)*255);
+    var bl2=Math.round(expColor(b2)*255);
+
+//    $("#combo-warning").text(rl+","+gl+","+bl);
+    x1="ff"+b2h[rl1]+b2h[gl1]+b2h[bl1]+"000000000000";
+    x2="ff"+b2h[rl2]+b2h[gl2]+b2h[bl2]+"000000000000";
+
+    cmd="dmx="+x1+x2;
+    doEquipmentRequestByName("COMBO",cmd);
+}
+
+
 function smokeControl(dur) {
     cmd="smoke"+dur;
     doEquipmentRequestByName("COMBO",cmd);
@@ -206,6 +224,13 @@ function scanForEquipment() {
     }
 }
 
+function playByName(chan, name) {
+    $.each(playlist, function(i,v) {
+        if (playlist[i].name.startsWith(name)) {
+            play(chan,playlist[i].index, playlist[i].name);
+        }
+    });
+}
 
 function updatePlaylist(x) {
     playlist=[];
@@ -314,13 +339,17 @@ function onChangeDmx(c) {
 function onResizeWindow() {
     var w=$(window).width();
     var h=$(window).height();
-    $("#leftColon").height(h-6);
-    $("#playlist").height(h-$("#controls").height()-6);
+    var hh=4; // $("#tabs ul").height();
+    $("#leftColon").height(h-6-hh);
+    $("#playlist").height(h-$("#controls").height()-6-hh);
 }
 
 
 
 $(function() {
+
+    $( "#tabs" ).tabs();
+
     $("#dmx").spectrum({
         color: "#000",
         flat: true,

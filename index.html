@@ -4,16 +4,25 @@
     <title>Бета терапия</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="jquery-ui.min.css">
+    <link rel="stylesheet" href="jquery-ui.css">
     <link rel="stylesheet" href="spectrum.css">
+    <link rel="stylesheet" href="partiture.css">
     <script src="jquery-3.2.1.min.js"></script>
     <script src="jquery-ui.min.js"></script>
     <script src="spectrum.js"></script>
     <script src="colorcalc.js"></script>
     <script src="script.js"></script>
+    <script src="partiture.js"></script>
 </head>
 <body>
-    <table border="0" width="100%" class="maintable">
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs1">Управление</a></li>
+            <li><a href="#tabs2">Партитура</a></li>
+        </ul>
+
+
+    <table border="0" width="100%" class="maintable" id=tabs1>
         <tr>
             <td width="50%" valign="top"><div id=leftColon class=scrollable>
                 <table id="lamp-controls" class="lightControlGroup" width="100%">
@@ -130,5 +139,286 @@
             </div></td>
         </tr>
     </table>
+
+    <table border="0" width="100%" class="partiture" id=tabs2>
+
+        <tbody>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Перед началом</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partInit()">Темнота</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Начало</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partBegin()">Музыка “Осень” потом фото “Парк”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Проходка Беаты за занавеской, проходка Отца перед занавеской.</p>
+                    <p>Отец уходит в “туалет”, 3 секунды пауза.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <a f="partEtudeLampa()">
+                    <p>Музыка стихает, “Парк” погасить. Музыка “Crack of doom”, лампа в режим мерцания.</p>
+                    </a>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p class="part-para"><span class="c0">Выход Отца и диалог с лампой. Война с табуреткой.</span></p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Лампа мешает выпить, дразнит Отца: <a f="partLampSnd1()">“звук1”</a> и <a f="partLampSnd2()">“звук2”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец наконец-то залезает на табуретку пытается закрутить лампочку.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partLampExplosion()">Взрыв лампы</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец падает.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partDark()">Темнота</a></p>
+                    <p><a f="partStopMusic()">Тишина</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Беата в темноте светит фонариком.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Беата: “Мне спросить надо про вашего сына, пожалуйста”. Отец идет выпить, Беата гасит фонарь.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partLightIn()">После этого постепенно нарастает свет как будто глаза привыкают к темноте.</a> Дальше все идет в неярком равномерном освещении.</p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Действие, изнасилование и т.д.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец: у меня где-то был успокоительный чай</p>
+                    <p>Беата: Да как же вы чай приготовите, если у вас света нет</p>
+                    <p>Отец делает жест типа “щас увидите”</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partPreapringTea()">Музыка “Crack of doom”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец приготавливает чай</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partPreparingTeaFadeOut()">Примерно на середине, когда Отец ставит кофейник на спиртовку музыка понемногу стихает</a>, Отец продолжает ее напевать.</p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Чаепитие и т.д., </p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Бета убегает, затем возвращается</p>
+                    <p>Отец: Да при чем тут этот свет!</p>
+                    <p>Беата: Вот и я без света живу!</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partDark()">Затемнение</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Беата в темноте исчезает за занавеску.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partIntermedia1()">Музыка “Осень”, фото “Парк”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Беата танцует за занавеской,</p>
+                    <p>Отец проходит перед занавеской, садится на диван.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partAct2()">Резко выключается музыка, исчезает “Парк”. Включается свет. Немного ярче, чем в первом действии.</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Действие, драка, отец падает, Беата сажает его на табуретку</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец: А как простить себя за такое?</p>
+                    <p>Беата: А если не простить, то как жить.</p>
+                    <p>Беата уходит на второй план</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partIntermedia2()">Негромко музыка “Осень”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Монолог Отца:</p>
+                    <p>В конце монолога: Я вас очень прошу, пожалуйста, придите.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partIntermedia2End()">Музыка стихает</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Действие, Отец опять начинает напиваться</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец: Расскажите, кого вы простили</p>
+                    <p>Бета: Маму</p>
+                    <p>Отец: А она-то чем провинилась?</p>
+                    <p>Бета: Мама мне письмо написала...</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partMonologMama()">Негромко музыка “Мама”.</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Монолог Беаты</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Конец монолога: А через полгода она… ну я не буду об этом. Ладно?</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partMonologMamaEnd()">Музыка стихает</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Действие, Отец умоляет Беату, Беата готовится уйти</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Беата: Или вы так, без прощения перевернули эту страницу, даже две.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partMonologFinal()">Негромко музыка “Осень”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Монолог Беаты, Отец опускается на пол</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partMonologFinalEnd()">Очень плавное затемнение, растянутое до конца монолога</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Конец монолога: Я думала у вас прощению научусь, у бабушки не научишься. Прощайте.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partMonologFinalEndImmediate()">Темнота</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Беата исчезает за занавеской</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partLampEdute2()">Включается лампа в нормальный режим</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Отец ищет Беату. Кричит “Бета!” убегает за занавеску.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partFinalDance()">Видео “Огоньки”</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Танец Беаты и Отца с фонариками за занавеской</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Конец танца: Беата и Отец расходятся по сторонам.</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p><a f="partPoklony()">Музыка “Мама” громче, чем во время монолога.</a></p>
+                </td>
+            </tr>
+            <tr class="part-row"><td class="part-cell-number" colspan="1" rowspan="1">NN</td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p>Выход на поклон</p>
+                </td>
+                <td class="part-cell" colspan="1" rowspan="1">
+                    <p></p>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    </div>
+
 </body>
 </html>
