@@ -13,7 +13,7 @@ var equipment_list={
         "warning": "#spot-warning"
     },
 
-    "COMBO": {
+    "COMBO1": {
         "gui": "#combo-controls",
         "warning": "#combo-warning"
     }
@@ -29,6 +29,7 @@ function getHighOfMyIp() {
     var a=$("<a></a>");
     a.prop("href",document.location);
     var host=a.prop("hostname");
+//    host='192.168.1.0';
     var splittedHost=host.split(".",4);
     if (splittedHost.length!=4) { alert("Can't get own IP:"+splittedHost); return null; }
     var myIpHigh=splittedHost[0]+'.'+splittedHost[1]+'.'+splittedHost[2]+'.';
@@ -39,19 +40,19 @@ function getHighOfMyIp() {
 var equipmentRequestCnt=0;
 
 function doEquipmentRequestByName(equipment,cmd,onOk,onFail) {
-    console.info("doEquipmentRequestByName "+equipment+" "+equipment_list[equipment].url);
+//    console.info("doEquipmentRequestByName "+equipment+" "+equipment_list[equipment].url);
     doEquipmentRequestByUrl(equipment_list[equipment].url,cmd,onOk,onFail);
 }
 
-function doEquipmentRequestByUrl(url,cmd,onOk,onFail) {
+function doEquipmentRequestByUrl(url,cmd,onOk,onFail,noDrop) {
     if (url==null) {
-        if (onFail!=null) onFail();
+        if (onFail!=null) setTimeout(onFail,1);
         return;
     }
 
-    if (equipmentRequestCnt>5) {
+    if (!noDrop && equipmentRequestCnt>5) {
         console.info("Drop request "+url);
-        if (onFail!=null) onFail();
+        if (onFail!=null) setTimeout(onFail,1);
         return;
     }
 
@@ -64,31 +65,31 @@ function doEquipmentRequestByUrl(url,cmd,onOk,onFail) {
             },
             "error": function() {
                 equipmentRequestCnt--;
-                if (onFail!=null) onFail();
+                if (onFail!=null) setTimeout(onFail,1);
             },
             "dataType": "text",
             "timeout": 1000,
             "nextRequest": null
         };
 
-//    console.info("Send request "+url);        
+    console.info("Send request "+url+"/"+cmd);        
     equipmentRequestCnt++;
     $.ajax(url+"/"+cmd+".", settings);
 }
 
 function equipmentTest(equipment) {
-    console.info("equipmentTest("+equipment+")");
+//    console.info("equipmentTest("+equipment+")");
     doEquipmentRequestByName(
         equipment,
         "test",
         function() {
-            console.info("Test "+equipment+" OK");
+//            console.info("Test "+equipment+" OK");
             equipment_list[equipment].errCnt=0;
             $(equipment_list[equipment].warning).fadeTo(500,0);
             setTimeout(function() { equipmentTest(equipment); },20000);
         },
         function() {
-            console.info("Test "+equipment+" Fail. Cnt="+equipment_list[equipment].errCnt);
+//            console.info("Test "+equipment+" Fail. Cnt="+equipment_list[equipment].errCnt);
             $(equipment_list[equipment].warning).fadeTo(500,1);
             if (++equipment_list[equipment].errCnt>10) {
                 equipment_list[equipment].url=null;
@@ -108,7 +109,7 @@ function spotControl(cmd) {
 }
 function doControl(index,value) {
     cmd= (value!=0 ? "on": "off")+index;
-    doEquipmentRequestByName("COMBO",cmd);
+    doEquipmentRequestByName("COMBO1",cmd);
 }
 
 var b2h=[];
@@ -126,7 +127,7 @@ function dmxControl(r,g,b) {
     var bl=Math.round(expColor(b)*255);
 //    $("#combo-warning").text(rl+","+gl+","+bl);
     cmd="dmx=ff"+b2h[rl]+b2h[gl]+b2h[bl]+"0000000000";
-    doEquipmentRequestByName("COMBO",cmd);
+    doEquipmentRequestByName("COMBO1",cmd);
 }
 
 function dmxControl2(r1,g1,b1, r2,g2,b2) {
@@ -143,13 +144,13 @@ function dmxControl2(r1,g1,b1, r2,g2,b2) {
     x2="ff"+b2h[rl2]+b2h[gl2]+b2h[bl2]+"000000000000";
 
     cmd="dmx="+x1+x2;
-    doEquipmentRequestByName("COMBO",cmd);
+    doEquipmentRequestByName("COMBO1",cmd);
 }
 
 
 function smokeControl(dur) {
     cmd="smoke"+dur;
-    doEquipmentRequestByName("COMBO",cmd);
+    doEquipmentRequestByName("COMBO1",cmd);
 }
 
 function isAllEquipmentConnected() {
@@ -160,29 +161,73 @@ function isAllEquipmentConnected() {
 
 var equipmentScanningInProgress=false;
 
+async function sleep(ms) {
+    let p=new Promise((resolve,reject) => {
+        setTimeout(resolve,ms);
+    });
+    await p;
+}
+
+async function fastScanForEquipment() {
+    var x=getHighOfMyIp();
+    iph=x[0];
+    console.info("Fast scanning for equipment:"+iph);
+    $("#scan-ip").text("Fast scanning for equipment:"+iph+".*");
+    let requestsInProgress=0;
+    for (let ipl=1; ipl<=255; ipl++) {
+        sleep(10);
+        let url="http://"+iph+ipl+":"+equipment_port;
+        requestsInProgress++;
+        doEquipmentRequestByUrl(
+            url,"test",
+            function (data) {
+                requestsInProgress--;
+                let s=equipment_list[data];
+                if (s) {
+                    let n=data;
+                    let needStartTest = (s.url==null);
+                    s.url=url;
+                    s.ipl=ipl;
+                    s.errCnt=0;
+                    if (needStartTest) {
+                        setTimeout(function() { equipmentTest(n); },1000);
+                        console.info("Equipment "+n+" found: "+url);
+                    } else {
+                        console.info("Equipment "+n+" update: "+url);
+                    }
+                }
+            },
+            function() {
+                requestsInProgress--;
+            },
+            true
+        );
+    }
+}
+
 function scanForEquipment_iter(iph,ipl) {
     console.info("Scanning for equipment:"+iph+ipl);
-    var url="http://"+iph+ipl+":"+equipment_port;
+    let url="http://"+iph+ipl+":"+equipment_port;
     $("#scan-ip").text(url);
     doEquipmentRequestByUrl(
         url,
         "test",
         function(data) {
-                $.each(equipment_list, function(n,s) {
-                    if (data==n) {
-                        console.info("data="+data+" n="+n);
-                        var needStartTest = (s.url==null);
-                        s.url=url;
-                        s.ipl=ipl;
-                        s.errCnt=0;
-                        if (needStartTest) {
-                            setTimeout(function() { equipmentTest(n); },1000);
-                            console.info("Equipment "+n+" found: "+url);
-                        } else {
-                            console.info("Equipment "+n+" update: "+url);
-                        }
+                let s=equipment_list[data];
+                if (s) {
+                    let n=data;
+                    console.info("data="+data+" n="+n);
+                    let needStartTest = (s.url==null);
+                    s.url=url;
+                    s.ipl=ipl;
+                    s.errCnt=0;
+                    if (needStartTest) {
+                        setTimeout(function() { equipmentTest(n); },1000);
+                        console.info("Equipment "+n+" found: "+url);
+                    } else {
+                        console.info("Equipment "+n+" update: "+url);
                     }
-                });
+                };
                 equipmentGuiCtrl();
                 if (isAllEquipmentConnected()) {
                     $("#equipmentScanning").hide(500);
@@ -216,7 +261,8 @@ function scanForEquipment() {
     var x=getHighOfMyIp();
 //    if (x!=null) scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
     if (x!=null) {
-        scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
+//        scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
+        scanForEquipment_iter(x[0], x[1]>=7 ? 135 : 2);
     } else {    // test mode
         $.each(equipment_list, function(n,s) {
             $(s.gui).fadeTo(500,1);
@@ -348,6 +394,8 @@ function onResizeWindow() {
 
 $(function() {
 
+//    $("#ver").text("v1");
+
     $( "#tabs" ).tabs();
 
     $("#dmx").spectrum({
@@ -386,6 +434,7 @@ $(function() {
     $("#pause2").click(function() { pausePlay(1); });
     $("#play2").click(function() { continuePlay(1); });
 
+//    fastScanForEquipment();
     scanForEquipment();
     $("#lamp-on").click(function() { lampControl("on"); });
     $("#lamp-off").click(function() { lampControl("off"); });
