@@ -12,6 +12,8 @@
     });
 });
 
+// rgb1 - 
+
 var partTransitionTimer=null;
 
 function coloredLights(r1,g1,b1, r2,g2,b2) {
@@ -21,12 +23,6 @@ function coloredLights(r1,g1,b1, r2,g2,b2) {
     } else {
         doControl(1,0);
     }
-    if (r2>=0.0 && g2>=0.0 && b2>=0.2) {
-        doControl(2,1);
-    } else {
-        doControl(2,0);
-    }
-
 }
 
 function partStopTransition() {
@@ -59,21 +55,22 @@ function partTransition(start, end, duration, func, done) {
     }
 }
 
-function setAllLights(r1,g1,b1, r2,b2,g2, lamp, spot) {
+function setAllLights(r1,g1,b1, r2,b2,g2, lamp, spot1, spot2) {
     partStopTransition();
     coloredLights(r1,g1,b1, r2,b2,g2);
     lampControl(lamp);
-    spotControl(spot);
+    doControl(2,spot1);
+    doControl(3,spot2);
 }
 
 function partBlackout() {
-    setAllLights(0,0,0, 0,0,0, "off", "off");
+    setAllLights(0,0,0, 0,0,0, "off", "off", "off");
     playByName(1, "i3");
-    doControl(0,0); doControl(1,0); doControl(2,0); doControl(3,0);
+    doControl(1,0); doControl(2,0); doControl(3,0); doControl(4,0);
 }
 
 function partDark() {
-    setAllLights(0,0,0, 0,0,0, "off", "off");
+    setAllLights(0,0,0, 0,0,0, "off", "off", "off");
     playByName(1, "i3");
 }
 
@@ -89,9 +86,9 @@ function partStopMusic() {
 }
 
 function partPark() {
-    partStopTransition(); lampControl("off"); spotControl("off");
+    partStopTransition(); lampControl("off"); doControl(2,"off"); doControl(3,"off");
     playByName(1,"i1"); 
-    partTransition(0, 0.5, 10000,
+    partTransition(0, 1, 10000,
         function(v) { coloredLights(0,v/2,v, 0,0,0); },
         function() { }
     );
@@ -103,14 +100,14 @@ function partInit() {
 }
 
 function partBegin() {
-    setAllLights(0,0,0, 0,0,0, "off", "off")
+    setAllLights(0,0,0, 0,0,0, "off", "off", "off")
     volume1(100); playByName(0, "a1");
     setTimeout(function() { partPark() },10000);
 }
 
 function partEtudeLampa() {
     playByName(1,"i3"); 
-    setAllLights(0,0,0, 0,0,0, "off", "off")
+    setAllLights(0,0,0, 0,0,0, "off", "off", "off")
     partTransition(100, 0, 3000, 
         function(v) { volume1(v); }, 
         function() {
@@ -129,11 +126,12 @@ function partLampExplosion() {
     lampControl("burn"); setTimeout(function() { playByName(1,"i3"); }, 2000);
 }
 function partLightIn() {
-    partStopTransition(); lampControl("off"); spotControl("off");
-    partTransition(0, 0.75, 7000, 
+    partStopTransition(); lampControl("off");
+    doControl(2,"off"); doControl(3,"off");
+    partTransition(0, 1, 7000, 
         function(v) { coloredLights(0,0,0, v,v,v); }, 
         function() {
-            spotControl("on");
+            setAllLights(0,0,0, 1,1,1, "off", "on", "off")
         }
     );
 }
@@ -157,11 +155,11 @@ function partIntermedia1() {
 
 function partAct2() {
     pausePlay(0); playByName(1, "i3");
-    setAllLights(0,0,0, 1,1,1, "off", "on")
+    setAllLights(0,0,0, 1,1,1, "off", "on", "on")
 }
 
 function partIntermedia2() {
-    spotControl("off");
+    doControl(2,"off"); doControl(3,"off");
     volume1(50); playByName(0, "a1");
     partTransition(0, 0.5, 3000, 
       function(v) {
@@ -175,11 +173,11 @@ function partIntermedia2() {
 
 function partIntermedia2End() {
     pausePlay(0); playByName(1, "i3");
-    setAllLights(0,0,0, 1,1,1, "off", "on")
+    setAllLights(0,0,0, 1,1,1, "off", "on", "on")
 }
 
 function partMonologMama() {
-    setAllLights(0,0,0, 1,1,1, "off", "on")
+    setAllLights(0,0,0, 1,1,1, "off", "on", "on")
     volume1(50); playByName(0, "a5");
 }
 
@@ -193,12 +191,12 @@ function partMonologMamaEnd() {
 }
 
 function partMonologFinal() {
-    setAllLights(0,0,0, 1,1,1, "off", "on")
+    setAllLights(0,0,0, 1,1,1, "off", "on", "on")
     volume1(50); playByName(0, "a1");
 }
 
 function partMonologFinalEnd() {
-    partStopTransition(); lampControl("off"); spotControl("off");
+    partStopTransition(); lampControl("off"); doControl(2,"off"); doControl(3,"off");
     partTransition(1, 0, 30000, 
         function(v) { volume1(v*50); coloredLights(0,0,0, v,v,v); }, 
         function() {
@@ -208,18 +206,18 @@ function partMonologFinalEnd() {
 }
 
 function partMonologFinalEndImmediate() {
-    setAllLights(0,0,0, 0,0,0, "off", "off")
+    setAllLights(0,0,0, 0,0,0, "off", "off", "off")
     pausePlay(0);
 }
 
 function partLampEdute2() {
-    setAllLights(0,0,0, 0,0,0, "on", "off")
+    setAllLights(0,0,0, 0,0,0, "on", "off", "off")
 }
 
 function partFinalDance() {
-    partStopTransition(); lampControl("off"); spotControl("off");
+    partStopTransition(); lampControl("off"); doControl(2,"off"); doControl(3,"off");
     volume1(100); playByName(0, "a8");
-    partTransition(0, 0.5, 10000,
+    partTransition(0, 1, 10000,
         function(v) { coloredLights(0,v/2,v, 0,0,0); },
         function() { }
     );
@@ -227,11 +225,11 @@ function partFinalDance() {
 
 function partPoklony() {
     volume2(0); playByName(1, "a5");
-    partStopTransition(); lampControl("off"); spotControl("off");
+    partStopTransition(); lampControl("off"); doControl(3,"off");
     partTransition(0, 1, 3000, 
         function(v) { volume1((1-v)*100); volume2((v)*100); }, 
         function() {
-            playByName(0, "i3"); coloredLights(0,0,0, 1,1,1); spotControl("on");
+            playByName(0, "i3"); coloredLights(0,0,0, 1,1,1); doControl(2,"on"); doControl(3,"on");
         }
     );
 }

@@ -8,10 +8,12 @@ var equipment_list={
         "warning": "#lamp-warning"
     },
 
+/*
     "SPOT1": {
         "gui": "#spot-controls",
         "warning": "#spot-warning"
     },
+*/
 
     "COMBO1": {
         "gui": "#combo-controls",
@@ -41,7 +43,9 @@ var equipmentRequestCnt=0;
 
 function doEquipmentRequestByName(equipment,cmd,onOk,onFail) {
 //    console.info("doEquipmentRequestByName "+equipment+" "+equipment_list[equipment].url);
-    doEquipmentRequestByUrl(equipment_list[equipment].url,cmd,onOk,onFail);
+    if (equipment_list[equipment]) {
+        doEquipmentRequestByUrl(equipment_list[equipment].url,cmd,onOk,onFail);
+    }
 }
 
 function doEquipmentRequestByUrl(url,cmd,onOk,onFail,noDrop) {
@@ -108,7 +112,11 @@ function spotControl(cmd) {
     doEquipmentRequestByName("SPOT1",cmd);
 }
 function doControl(index,value) {
-    cmd= (value!=0 ? "on": "off")+index;
+    if (value=="on" || value==1) {
+        cmd="on"+index;
+    } else if (value=="off" || value==0) {
+        cmd="off"+index;
+    }
     doEquipmentRequestByName("COMBO1",cmd);
 }
 
@@ -262,7 +270,7 @@ function scanForEquipment() {
 //    if (x!=null) scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
     if (x!=null) {
 //        scanForEquipment_iter(x[0], x[1]>=7 ? x[1]-5 : 2);
-        scanForEquipment_iter(x[0], x[1]>=7 ? 135 : 2);
+        scanForEquipment_iter(x[0], 100);
     } else {    // test mode
         $.each(equipment_list, function(n,s) {
             $(s.gui).fadeTo(500,1);
@@ -365,14 +373,23 @@ function crossfade(value) {
 }
 
 function pausePlay(chan) {
-    $.get("", { "pause": chan } );
+    $.get("", { "pause": chan } )
+    .fail(
+        () =>{ $.get("", { "pause": chan } ); }
+    );
 }
 function continuePlay(chan) {
-    $.get("", { "continue": chan } );
+    $.get("", { "continue": chan } )
+    .fail(
+        () =>{ $.get("", { "continue": chan } ); }
+    );
 }
 function play(chan, file, name) {
     $("#play-buttons"+(chan+1)+"-cell .trackname").text(name);
-    $.get("", { "play": chan+","+file } );
+    $.get("", { "play": chan+","+file } )
+    .fail(
+        () => { $.get("", { "play": chan+","+file } ); }
+    );
 }
 
 function onChangeDmx(c) {
