@@ -137,7 +137,7 @@ function partLightIn() {
 }
 
 function partPreapringTea() {
-    playByName(0,"a2"); volume1(75);
+    playByName(0,"a9"); volume1(75);
 }
 
 function partPreparingTeaFadeOut() {

@@ -146,10 +146,11 @@ function dmxControl2(r1,g1,b1, r2,g2,b2) {
     var rl2=Math.round(expColor(r2)*255);
     var gl2=Math.round(expColor(g2)*255);
     var bl2=Math.round(expColor(b2)*255);
+    var wl2=Math.min(rl2,gl2,bl2)
 
 //    $("#combo-warning").text(rl+","+gl+","+bl);
     x1="ff"+b2h[rl1]+b2h[gl1]+b2h[bl1]+"000000000000";
-    x2="ff"+b2h[rl2]+b2h[gl2]+b2h[bl2]+"000000000000";
+    x2="00ff00ff"+b2h[rl2]+b2h[gl2]+b2h[bl2]+b2h[wl2]+"0000";
 
     cmd="dmx="+x1+x2;
     doEquipmentRequestByName("COMBO1",cmd);
