@@ -54,7 +54,7 @@ function doEquipmentRequestByUrl(url,cmd,onOk,onFail,noDrop) {
         return;
     }
 
-    if (!noDrop && equipmentRequestCnt>5) {
+    if (!noDrop && equipmentRequestCnt>15) {
         console.info("Drop request "+url);
         if (onFail!=null) setTimeout(onFail,1);
         return;
