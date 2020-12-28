@@ -177,13 +177,18 @@ function partEtudeLampa() {
     setAllLights(0,0.5,1, 0,0,0, "off", "off", "off")
     partTransition(1, 0, 5000, 
         function(v) {
-            volume1(v*100); 
+            volume1(expVolume(v*100));
             coloredLights(0,v/2,v, 0,0,0);
         }, 
         function() {
             coloredLights(0,0,0, 0,0,0);
-            playByName(0,"a2"); startLampaTiming();
-            volume1(100); playByName(1,"i2");
+            pausePlay(0); playByName(1,"i2");
+            partTransition(1, 0, 5000, 
+                function(v) { },
+                function() {
+                    volume1(100); playByName(0,"a2"); startLampaTiming();
+                }
+            );
         }
     );
 }
@@ -225,8 +230,15 @@ function partIntermedia1() {
 }
 
 function partAct2() {
-    pausePlay(0); playByName(1, "i3");
-    setAllLights(0,0,0, 1,1,1, "off", "on", "on")
+    partTransition(100, 0, 3000, 
+      function(v) {
+        volume1(expVolume(v));
+      },
+      function() {
+        pausePlay(0); playByName(1, "i3");
+        setAllLights(0,0,0, 1,1,1, "off", "on", "on")
+      }
+    );
 }
 
 function partIntermedia2() {

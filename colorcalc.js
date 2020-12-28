@@ -36,4 +36,7 @@ function hsv2rgb(hsv) {
 function expColor(x) {
     return (Math.exp(x*4.498717586511349)-1)*0.01124837046372007;
 }
+function expVolume(x) {
+    return expColor(x/100.0)*100.0;
+}
 
